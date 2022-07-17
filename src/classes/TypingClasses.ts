@@ -31,30 +31,36 @@ export class TypingChar {
   }
 }
 export class TypingText {
-  inputText: string
+  finalText: string
   charList: Array<TypingChar>
   prevLength: number
   completed: boolean
+  currentState: CharState
+  currentText: string
 
-  constructor(inputText: string) {
-    this.inputText = inputText
-    this.charList = inputText.split('').map((char) => new TypingChar(char))
+  constructor(finalText: string) {
+    this.finalText = finalText
+    this.charList = finalText.split('').map((char) => new TypingChar(char))
     this.prevLength = 0
     this.completed = false
+    this.currentState = CharState.Default
+    this.currentText = ''
   }
 
-  toString(): string {
-    return this.inputText
+  get text(): string {
+    return this.finalText
   }
   get length(): number {
-    return this.inputText.length
+    return this.finalText.length
   }
-
+  get state(): CharState {
+    return this.charList[this.currentText.length - 1].state
+  }
   eval(value: string) {
     if (this.completed || value.length > this.length) {
       return
     }
-    if (value == this.inputText) {
+    if (value == this.finalText) {
       this.completed = true
       this.charList[this.prevLength].state = CharState.Correct
       this.prevLength = value.length
@@ -69,15 +75,14 @@ export class TypingText {
       ) {
         this.charList[i].state = CharState.Default
       }
-      this.prevLength = value.length
     } else {
-      const subStr = this.toString().substring(0, value.length)
-      if (value == subStr) {
+      this.currentText = this.text.substring(0, value.length)
+      if (value == this.currentText) {
         this.charList[this.prevLength].state = CharState.Correct
       } else {
         this.charList[this.prevLength].state = CharState.Incorrect
       }
-      this.prevLength = value.length
     }
+    this.prevLength = value.length
   }
 }

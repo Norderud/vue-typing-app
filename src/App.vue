@@ -11,7 +11,7 @@ export default defineComponent({
 
   data() {
     return {
-      text: 'Test av tekst',
+      text: 'Danay er en fin kar',
       on: false,
       links: ['Home', 'About Us', 'Team', 'Services', 'Blog', 'Contact Us'],
     }
@@ -29,7 +29,7 @@ export default defineComponent({
     >
       <v-app-bar-nav-icon />
 
-      <v-toolbar-title>Page title</v-toolbar-title>
+      <v-toolbar-title>Typing App</v-toolbar-title>
 
       <v-spacer />
     </v-app-bar>
@@ -38,7 +38,7 @@ export default defineComponent({
         <InputField :input-text="text" />
       </v-container>
     </v-main>
-    <v-footer
+    <!-- <v-footer
       padless
       color="primary"
     >
@@ -48,6 +48,6 @@ export default defineComponent({
       >
         {{ new Date().getFullYear() }} — <strong>Typing app</strong>
       </v-col>
-    </v-footer>
+    </v-footer> -->
   </v-app>
 </template>

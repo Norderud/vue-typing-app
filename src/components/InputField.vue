@@ -1,6 +1,6 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
-import { TypingText } from '../classes/TypingClasses'
+import { TypingText, CharState } from '../classes/TypingClasses'
 export default defineComponent({
   name: 'InputField',
   props: {
@@ -14,7 +14,7 @@ export default defineComponent({
       targetText: new TypingText(this.inputText),
       progression: 0,
       value: '',
-      completed: false,
+      showCompleted: false,
     }
   },
   computed: {
@@ -26,8 +26,11 @@ export default defineComponent({
   methods: {
     checkInput() {
       this.targetText.eval(this.value)
-      this.progression =
-        (this.targetText.prevLength / this.targetText.length) * 100
+      if (this.targetText.state == CharState.Correct) {
+        this.progression =
+          (this.targetText.prevLength / this.targetText.length) * 100
+      }
+      this.showCompleted = this.targetText.completed
     },
   },
 })
@@ -39,17 +42,14 @@ export default defineComponent({
     fluid
   >
     <v-row>
-      <v-col cols="4">
+      <v-col cols="3">
         <div
           class="ma-auto"
           style="max-width: 300px"
         />
       </v-col>
-      <v-col cols="4">
-        <div
-          class="center"
-          style="max-width: 300px"
-        >
+      <v-col cols="6">
+        <div class="text-h4 , active && text-center">
           <template
             v-for="char in targetText.charList"
             :key="char"
@@ -60,19 +60,32 @@ export default defineComponent({
           </template>
           <v-text-field
             v-model="value"
-            color="cyan darken"
-            label="Text field"
-            placeholder="Start typing..."
+            color="primary "
             @input="checkInput"
-          />
-          <v-progress-linear
-            v-model="progression"
-            :color="color"
-            height="20"
-            absolute
           />
         </div>
       </v-col>
+      <v-progress-linear
+        v-model="progression"
+        :color="color"
+        height="20"
+        absolute
+      />
+      <div class="text-center ma-2">
+        <v-snackbar v-model="showCompleted">
+          You're finished!
+          <template #action="{ attrs }">
+            <v-btn
+              color="pink"
+              text
+              v-bind="attrs"
+              @click="showCompleted = false"
+            >
+              Close
+            </v-btn>
+          </template>
+        </v-snackbar>
+      </div>
     </v-row>
   </v-container>
 </template>
