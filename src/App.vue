@@ -11,9 +11,8 @@ export default defineComponent({
 
   data() {
     return {
-      text: 'Danay er en fin kar',
+      text: "Hmm. We're having trouble finding that site.",
       on: false,
-      links: ['Home', 'About Us', 'Team', 'Services', 'Blog', 'Contact Us'],
     }
   },
 })

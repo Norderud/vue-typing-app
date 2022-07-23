@@ -14,7 +14,9 @@ export default defineComponent({
       targetText: new TypingText(this.inputText),
       progression: 0,
       value: '',
-      showCompleted: false,
+      started: false,
+      startTime: 0,
+      wpm: 0,
     }
   },
   computed: {
@@ -25,12 +27,19 @@ export default defineComponent({
   },
   methods: {
     checkInput() {
+      const now = Date.now() - this.startTime
+      this.wpm = Math.floor(this.targetText.length / 5 / (now / 60000))
+      console.log(this.wpm)
       this.targetText.eval(this.value)
-      if (this.targetText.state == CharState.Correct) {
+      if (!this.started) {
+        this.startTime = Date.now()
+        this.started = true
+      }
+      if (this.targetText.lastCharState == CharState.Correct) {
         this.progression =
           (this.targetText.prevLength / this.targetText.length) * 100
       }
-      this.showCompleted = this.targetText.completed
+      return
     },
   },
 })
@@ -63,30 +72,24 @@ export default defineComponent({
             color="primary "
             @input="checkInput"
           />
+          <v-input v-model="wpm">
+            {{ wpm }}
+          </v-input>
         </div>
+        <v-progress-linear
+          v-model="progression"
+          :color="color"
+          height="20"
+          absolute
+        />
       </v-col>
-      <v-progress-linear
-        v-model="progression"
-        :color="color"
-        height="20"
-        absolute
-      />
-      <div class="text-center ma-2">
-        <v-snackbar v-model="showCompleted">
-          You're finished!
-          <template #action="{ attrs }">
-            <v-btn
-              color="pink"
-              text
-              v-bind="attrs"
-              @click="showCompleted = false"
-            >
-              Close
-            </v-btn>
-          </template>
-        </v-snackbar>
-      </div>
     </v-row>
+    <div class="text-center ma-2">
+      <v-snackbar v-model="targetText.completed">
+        You finished with {{ wpm }} wpm!
+        <template #action="{ attrs }" />
+      </v-snackbar>
+    </div>
   </v-container>
 </template>
 

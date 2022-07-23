@@ -53,7 +53,7 @@ export class TypingText {
   get length(): number {
     return this.finalText.length
   }
-  get state(): CharState {
+  get lastCharState(): CharState {
     return this.charList[this.currentText.length - 1].state
   }
   eval(value: string) {
