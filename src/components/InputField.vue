@@ -29,7 +29,6 @@ export default defineComponent({
     checkInput() {
       const now = Date.now() - this.startTime
       this.wpm = Math.floor(this.targetText.length / 5 / (now / 60000))
-      console.log(this.wpm)
       this.targetText.eval(this.value)
       if (!this.started) {
         this.startTime = Date.now()
