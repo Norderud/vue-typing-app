@@ -11,7 +11,7 @@ export default defineComponent({
 
   data() {
     return {
-      text: "Hmm. We're having trouble finding that site.",
+      text: 'Thomas Almestad er en kul fyr!',
       on: false,
     }
   },
